@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Font Manager Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <h1>Advanced Font Manager</h1>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="search-box">
+                <input type="text" id="search" placeholder="Search docs...">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#quick-start">Quick Start</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#loading-methods">Loading Methods</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#events">Events</a></li>
+                <li><a href="#status">Status Methods</a></li>
+                <li><a href="#cleanup">Cleanup</a></li>
+                <li><a href="#errors">Error Handling</a></li>
+            </ul>
+        </aside>
+
+        <main class="content">
+            <section id="quick-start">
+                <h2>Quick Start</h2>
+                <pre><code class="language-typescript">
+import { FontLoader } from 'advanced-font-manager';
+
+const loader = new FontLoader({ debugLevel: 'info' });
+await loader.loadFromUrl({
+    fonts: [{
+        url: 'https://fonts.com/roboto.ttf',
+        family: 'Roboto'
+    }]
+});
+                </code></pre>
+            </section>
+
+            <section id="installation">
+                <h2>Installation</h2>
+                <div class="installation-tabs">
+                    <button class="tab-btn active" data-tab="npm">npm</button>
+                    <button class="tab-btn" data-tab="yarn">yarn</button>
+                </div>
+                <div class="tab-content active" id="npm">
+                    <pre><code>npm install advanced-font-manager</code></pre>
+                </div>
+                <div class="tab-content" id="yarn">
+                    <pre><code>yarn add advanced-font-manager</code></pre>
+                </div>
+            </section>
+
+            <!-- Additional sections -->
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
