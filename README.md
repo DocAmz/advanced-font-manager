@@ -62,6 +62,7 @@ await loader.loadFromBuffer({
 ### FontLoader
 
 #### Constructor
+
 ```typescript
 new FontLoader(options?: FontLoaderOptions, rules?: ValidationRule[])
 ```
