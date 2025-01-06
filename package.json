@@ -1,11 +1,12 @@
 {
   "name": "advanced-font-manager",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "home": "https://docamz.github.io/advanced-font-manager/",
   "repository": {
-    "url": ""
+    "url": "https://github.com/DocAmz/advanced-font-manager"
   },
   "scripts": {
     "build": "tsup",

@@ -1,4 +1,4 @@
-# advanced-font-manager
+# advanced-font-manager (WIP)
 
 A TypeScript library for managing web font loading with support for multiple sources, validation, and error handling.
 Initially developed to solve canvas rendering issues with custom fonts in React applications, this library provides a simple API for loading fonts from URLs, files, or buffer data. It also includes built-in validation and error handling, event-driven architecture, and font face lifecycle management. Environment-agnostic and easy to integrate with any web application. (resolver is an experimental feature, use with caution and report any issues)
