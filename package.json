@@ -1,0 +1,32 @@
+{
+  "name": "advanced-font-manager",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "url": ""
+  },
+  "scripts": {
+    "build": "tsup",
+    "pack": "npm run build && npm pack",
+    "link": "npm link",
+    "test": ""
+  },
+  "keywords": [
+    "font",
+    "font-manager",
+    "font-loader",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Advanced typescript Font Loader & Manager for Web",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/opentype.js": "^1.3.8",
+    "opentype.js": "^1.3.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
