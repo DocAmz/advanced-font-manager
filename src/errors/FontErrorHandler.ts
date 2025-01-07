@@ -79,7 +79,7 @@ export class FontErrorHandler {
 
     if (errorMessage.includes('sanitizer')) {
       return {
-        type: 'security',
+        type: 'sanitizer',
         message: 'Font was blocked for security reasons',
         details: ['The font file appears to be corrupted or invalid.'],
         originalError: error

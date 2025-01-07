@@ -8,6 +8,7 @@ export interface FontLoadError {
     | 'format'
     | 'security'
     | 'validation'
+    | 'sanitizer'
     | 'DOMException'
     | 'unknown';
   message: string;

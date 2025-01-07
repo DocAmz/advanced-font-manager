@@ -203,7 +203,7 @@ export class FontLoader extends BaseLoader {
   public unloadFontFaceByBuffer(buffer: ArrayBuffer) {}
 
   public parseFontFace(family: string) {
-    this.parseFontFace(family);
+    this.parse(family);
   }
 
   public destroy() {}
