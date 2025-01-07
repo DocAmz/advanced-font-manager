@@ -21,84 +21,10 @@ npm install advanced-font-manager
 - Configurable debug levels
 - Font face lifecycle management
 
-## Usage
+## Documentation
 
-```typescript
-import { FontLoader } from 'advanced-font-manager';
-
-// Initialize with options
-const loader = new FontLoader({
-  debugLevel: 'info',
-  useResolvers: true
-});
-
-// Load fonts from URL
-await loader.loadFromUrl({
-  fonts: [{
-    url: 'https://fonts.com/roboto.ttf',
-    family: 'Roboto'
-  }]
-});
-
-// Load from file
-await loader.loadFromFile({
-  fonts: [{
-    file: fontFile,
-    family: 'OpenSans'
-  }]
-});
-
-// Load from buffer
-await loader.loadFromBuffer({
-  fonts: [{
-    buffer: fontBuffer,
-    family: 'Lato'
-  }]
-});
-```
-
-## API Reference
-
-### FontLoader
-
-#### Constructor
-
-```typescript
-new FontLoader(options?: FontLoaderOptions, rules?: ValidationRule[])
-```
-
-#### Methods
-
-- `loadFromUrl({ fonts, params }): Promise<void>`
-- `loadFromFile({ fonts, params }): Promise<void>`
-- `loadFromBuffer({ fonts, params }): Promise<void>`
-- `getFontFaces(): FontFace[]`
-- `getLoadedFontFaces(): Set<string>`
-- `getFailedFontFaces(): FontFace[]`
-- `getFontFaceErrors(family: string): FontLoadError | null`
-- `isLoaded(family: string): boolean`
-- `isParsed(family: string): boolean`
-- `isErrored(family: string): boolean`
-
-### Events (comming soon)
-
-Use `on()` and `off()` to subscribe/unsubscribe to font loading events:
-
-```typescript
-loader.on('fontLoaded', (family) => {
-  console.log(`Font ${family} loaded successfully`);
-});
-```
-
-### Resolver (experimental)
-
-Use `useResolvers` option to enable font source resolvers:
-
-```typescript
-const loader = new FontLoader({
-  useResolvers: true
-});
-```
+see [API documentation](https://docamz.github.io/advanced-font-manager/)
+demo: comming soon
 
 ## License
 
