@@ -79,17 +79,24 @@ new FontLoader(options?: FontLoaderOptions, rules?: ValidationRule[])
 - `isLoaded(family: string): boolean`
 - `isParsed(family: string): boolean`
 - `isErrored(family: string): boolean`
-- `unloadFontFaces(): void`
-- `unloadFontFace(family: string): void`
-- `unloadFontFaceByURL(url: string): void`
 
-### Events
+### Events (comming soon)
 
 Use `on()` and `off()` to subscribe/unsubscribe to font loading events:
 
 ```typescript
 loader.on('fontLoaded', (family) => {
   console.log(`Font ${family} loaded successfully`);
+});
+```
+
+### Resolver (experimental)
+
+Use `useResolvers` option to enable font source resolvers:
+
+```typescript
+const loader = new FontLoader({
+  useResolvers: true
 });
 ```
 
