@@ -23,8 +23,8 @@ npm install advanced-font-manager
 
 ## Documentation
 
-see [API documentation](https://docamz.github.io/advanced-font-manager/)
-demo: comming soon
+1. see [API documentation](https://docamz.github.io/advanced-font-manager/)
+2. demo: comming soon
 
 ## Todo
 
@@ -37,6 +37,7 @@ demo: comming soon
 - [ ] Add new normalizer (family, weight, url, path)
 - [ ] Add new sanitizer (path, style)
 - [ ] WIP Font Resolver (#1)
+- [ ] Caches system
 - [ ] Validations system
 - [ ] Add Rules examples
 - [ ] Add unit tests
