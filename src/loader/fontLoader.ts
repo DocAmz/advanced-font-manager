@@ -80,13 +80,11 @@ export class FontLoader extends BaseLoader {
     try {
       await this.load(this.fontFaces, params);
     } catch (error) {
-
       if(this.options.useResolvers) {
         console.error('should call resolver', error);
       } else {
         console.error('should not call resolver', error);
       }
-
     }
   }
   public async loadFromFile(args: loadFromFileProps) {
@@ -117,9 +115,12 @@ export class FontLoader extends BaseLoader {
     try {
       await this.load(this.fontFaces, params);
     } catch (error) {
-      console.error(error);
+      if(this.options.useResolvers) {
+        console.error('should call resolver', error);
+      } else {
+        console.error('should not call resolver', error);
+      }
     }
-
   }
 
   public on(event: FontLoaderEvents, listener: (...args: any[]) => void ) {}
@@ -204,6 +205,10 @@ export class FontLoader extends BaseLoader {
 
   public parseFontFace(family: string) {
     this.parse(family);
+  }
+
+  public getFontFaceData(family: string): opentype.Font | null {
+    return this.getFont(family);
   }
 
   public destroy() {}

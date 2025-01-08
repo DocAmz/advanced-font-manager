@@ -194,4 +194,8 @@ export class BaseLoader {
     hasBeenParsed(family: string): boolean {
         return this.parsedFontFaces.has(family);
     }
+
+    getFont(family: string): op.Font | null {
+        return this.parsedFontFaces.get(family) || null;
+    }
 }

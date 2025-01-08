@@ -5,7 +5,7 @@ import * as op from "opentype.js";
 
 export type ValidationRule = {
   type: 'metrics' | 'glyph' | 'font' | 'names' | 'tables'
-  rule: MetricsValidationRule | GlyphValidationRule;
+  rule: MetricsValidationRule | GlyphValidationRule | FontValidationRule | NamesValidationRule | TablesValidationRule
   message?: string;
 }
 
