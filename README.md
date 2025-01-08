@@ -26,6 +26,21 @@ npm install advanced-font-manager
 see [API documentation](https://docamz.github.io/advanced-font-manager/)
 demo: comming soon
 
+## Todo
+
+- [x] Working Loader
+- [x] Font Face Lifecycle
+- [x] Logging system (debug levels)
+- [ ] getters for parsed fonts data
+- [ ] WIP Error Handling system (basic error already implemented)
+- [ ] Font Face Observer w/ Events
+- [ ] Add new normalizer (family, weight, url, path)
+- [ ] Add new sanitizer (path, style)
+- [ ] WIP Font Resolver (#1)
+- [ ] Validations system
+- [ ] Add Rules examples
+- [ ] Add unit tests
+
 ## License
 
 MIT
