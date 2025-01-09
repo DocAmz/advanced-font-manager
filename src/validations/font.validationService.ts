@@ -47,16 +47,13 @@ export class FontValidationService {
 
   getGlyphData(font: op.Font) {
 
-    // @ts-ignore fix later
-    return font.glyphs.glyphs.map((glyph: op.Glyph) => {
-      return {
-        name: glyph.name,
-        unicode: glyph.unicode,
-        advanceWidth: glyph.advanceWidth,
-        xMin: glyph.xMin,
-        xMax: glyph.xMax,
-        yMin: glyph.yMin,
-        yMax: glyph.yMax,
+    let glyphData = new Map<number, opentype.Glyph>();
+
+    for (let i = 0; i < font.glyphs.length; i++) {
+      const glyph = font.glyphs.get(i);
+      glyphData.set(i, glyph);
+    }
+
+    return glyphData;
   }
-  })}
 }

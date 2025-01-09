@@ -36,6 +36,12 @@ export class SanitizerService {
 
   public async sanitize(font: opentype.Font, rules: ValidationRule[]): Promise<SanitizerResult> {
 
+    let result: SanitizerResult = {
+      success: false,
+      message: 'Font is not valid',
+      errors: ['failed to initialize validation services']
+    }
+
     // Reset all values
     this.resetDefaults()
     if(!FontValidationService || !GlyphValidationService || !MetricsValidationService) {
@@ -48,18 +54,17 @@ export class SanitizerService {
       }
     }
 
-    // Create result object
-    let result: SanitizerResult
 
 
     const fontMetrics = this.FontValidationService?.validateFont(font, rules.filter(rule => rule.type === 'font'))
     if (!fontMetrics) {
+
+      let error = ['Font validation failed']
+
       result = {
         success: false,
-        message: 'Font is not valid',
-        errors: [
-          'Font is not valid'
-        ]
+        message: error[0],
+        errors: result.errors ? [...result.errors, ...error] : ['Font metrics are not valid']
       }
       return result
     }
@@ -79,39 +84,42 @@ export class SanitizerService {
 
     const glyphData = this.FontValidationService?.getGlyphData(font)
     if (!glyphData) {
+
+      let error = ['Failed to get glyph data']
+
       result = {
         success: false,
-        message: 'Font is not valid',
-        errors: [
-          'Font is not valid'
-        ]
+        message: error[0],
+        errors: result.errors ? [...result.errors, ...error] : ['Failed to get glyph data']
       }
       return result
     }
 
-    const glyphs = this.GliphValidationService?.validateGlyphs(glyphData, this.metrics, rules.filter(rule => rule.type === 'glyph'))
+    const glyphs = this.GliphValidationService?.validateGlyphs(Array.from(glyphData.values()), this.metrics, rules.filter(rule => rule.type === 'glyph'))
     if (!glyphs) {
+
+      let error = ['Glyphs are not valid']
+
       result = {
         success: false,
-        message: 'Font is not valid',
-        errors: [
-          'Font is not valid'
-        ]
+        message: error[0],
+        errors: result.errors ? [...result.errors, ...error] : ['Glyphs are not valid']
       }
       return result
     }
 
-    this.stats.totalGlyphs = glyphData.length
-    this.stats.validGlyphs = glyphData.length
+    this.stats.totalGlyphs = Array.from(glyphData).length
+    this.stats.validGlyphs = Array.from(glyphData).length
 
     const metrics = this.MetricsValidationService?.validateMetrics(this.metrics, rules.filter(rule => rule.type === 'metrics'))
     if (!metrics) {
+
+      let error = ['Metrics are not valid']
+
       result = {
         success: false,
-        message: 'Font is not valid',
-        errors: [
-          'Font is not valid'
-        ]
+        message: error[0],
+        errors: result.errors ? [...result.errors, ...error] : ['Metrics are not valid']
       }
       return result
     }
@@ -124,7 +132,7 @@ export class SanitizerService {
       message: 'Font is valid',
       font: this.createSubsetFont(font, glyphData).toArrayBuffer(),
       stats: this.stats,
-      errors: this.errors || []
+      errors: result.errors ? [ ...this.errors, ...result.errors] : this.errors
     }
 
     return result
