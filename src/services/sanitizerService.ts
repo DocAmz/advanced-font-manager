@@ -10,7 +10,7 @@ export class SanitizerService {
   private FontValidationService: FontValidationService | undefined = undefined
   private MetricsValidationService: MetricsValidationService | undefined = undefined
   private metrics: FontMetrics | undefined = undefined;
-  private errors: string[] = []
+  private errors: Error[] = []
 
   private stats = {
     totalMetrics: 0,
@@ -35,11 +35,11 @@ export class SanitizerService {
   }
 
   public async sanitize(font: opentype.Font, rules: ValidationRule[]): Promise<SanitizerResult> {
-
     let result: SanitizerResult = {
       success: false,
+      font: font.toArrayBuffer(),
       message: 'Font is not valid',
-      errors: ['failed to initialize validation services']
+      errors: []
     }
 
     // Reset all values
@@ -49,7 +49,7 @@ export class SanitizerService {
         success: false,
         message: 'Validation services are not available',
         errors: [
-          'Validation services are not available'
+          new Error('Validation services are not available')
         ]
       }
     }
@@ -59,12 +59,13 @@ export class SanitizerService {
     const fontMetrics = this.FontValidationService?.validateFont(font, rules.filter(rule => rule.type === 'font'))
     if (!fontMetrics) {
 
-      let error = ['Font validation failed']
+      let message = 'Font validation failed'
+      let error = [new Error(message)]
 
       result = {
         success: false,
-        message: error[0],
-        errors: result.errors ? [...result.errors, ...error] : ['Font metrics are not valid']
+        message: message,
+        errors: result.errors ? [...result.errors, ...error] : error
       }
       return result
     }
@@ -85,12 +86,13 @@ export class SanitizerService {
     const glyphData = this.FontValidationService?.getGlyphData(font)
     if (!glyphData) {
 
-      let error = ['Failed to get glyph data']
+      let message = 'Failed to get glyph data'
+      let error = [new Error(message)]
 
       result = {
         success: false,
-        message: error[0],
-        errors: result.errors ? [...result.errors, ...error] : ['Failed to get glyph data']
+        message: message,
+        errors: result.errors ? [...result.errors, ...error] : error
       }
       return result
     }
@@ -98,12 +100,13 @@ export class SanitizerService {
     const glyphs = this.GliphValidationService?.validateGlyphs(Array.from(glyphData.values()), this.metrics, rules.filter(rule => rule.type === 'glyph'))
     if (!glyphs) {
 
-      let error = ['Glyphs are not valid']
+      let message = 'Glyphs are not valid'
+      let error = [new Error(message)]
 
       result = {
         success: false,
-        message: error[0],
-        errors: result.errors ? [...result.errors, ...error] : ['Glyphs are not valid']
+        message: message,
+        errors: result.errors ? [...result.errors, ...error] : error
       }
       return result
     }
@@ -113,13 +116,13 @@ export class SanitizerService {
 
     const metrics = this.MetricsValidationService?.validateMetrics(this.metrics, rules.filter(rule => rule.type === 'metrics'))
     if (!metrics) {
-
-      let error = ['Metrics are not valid']
+      let message = 'Metrics are not valid'
+      let error = [new Error(message)]
 
       result = {
         success: false,
-        message: error[0],
-        errors: result.errors ? [...result.errors, ...error] : ['Metrics are not valid']
+        message: message,
+        errors: result.errors ? [...result.errors, ...error] : error
       }
       return result
     }

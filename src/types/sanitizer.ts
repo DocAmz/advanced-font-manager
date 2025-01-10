@@ -14,7 +14,7 @@ export type SanitizerResult = {
     validFontParams: number;
     fixedFontParams: number;
   };
-  errors?: string[]
+  errors?: Error[]
 }
 
 export type FontMetrics = {

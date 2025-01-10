@@ -129,7 +129,7 @@ export class BaseLoader {
                 const errorMessage = error instanceof Error ? error.message : "Unknown error";
                 // font resolver here *********
                 //if(resolve) {
-                    this.logger.error(`Failed to load font: ${fontFace.family}, ${errorMessage}, resolver called`);
+                    this.logger.warn(`Failed to load font: ${fontFace.family}, ${errorMessage}, resolver called`);
                     this.logger.info(`Resolving font: ${fontFace.family}`, this.originalBuffers);
 
                     this.logger.info("Checking originalBuffers keys:", [...this.originalBuffers.keys()]);
