@@ -17,34 +17,28 @@ export type loadParameters = {
 }
 
 export type loadFromUrlProps = {
-  fonts: [
-    {
-      url: string;
-      family: string;
-      options?: Prettify<fontFacesOptions>;
-    }
-  ];
+  fonts: Array<{
+    url: string;
+    family: string;
+    options?: fontFacesOptions;
+  }>;
   params?: loadParameters;
 }
 
 export type loadFromFileProps = {
-  fonts: [
-    {
-      file: File;
-      family: string;
-      options?: fontFacesOptions;
-    }
-  ];
+  fonts: Array<{
+    file: File;
+    family: string;
+    options?: fontFacesOptions;
+  }>;
   params?: loadParameters;
-}
+};
 export type loadFromBufferProps = {
-  fonts: [
-    {
-      buffer: ArrayBuffer;
-      family: string;
-      options?: fontFacesOptions;
-    }
-  ];
+  fonts: Array<{
+    buffer: ArrayBuffer;
+    family: string;
+    options?: fontFacesOptions;
+  }>;
   params?: loadParameters;
 }
 

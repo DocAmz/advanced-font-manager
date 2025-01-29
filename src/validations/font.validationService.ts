@@ -48,7 +48,6 @@ export class FontValidationService {
   getGlyphData(font: op.Font) {
 
     let glyphData = new Map<number, opentype.Glyph>();
-
     for (let i = 0; i < font.glyphs.length; i++) {
       const glyph = font.glyphs.get(i);
       glyphData.set(i, glyph);

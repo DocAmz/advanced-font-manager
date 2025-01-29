@@ -23,7 +23,8 @@ import { FontLoaderEvents, FontLoaderOptions, loadFromBufferProps, loadFromFileP
  * @example loader.loadFromFile({ fonts: [{ file: file, family: 'Roboto' }] })
  * @example loader.loadFromBuffer({ fonts: [{ buffer: buffer, family: 'Roboto' }] })
  */
-export class FontLoader extends BaseLoader {
+export class FontManager extends BaseLoader {
+
   /**
    *  List of font faces to load
    * @type {FontFace[]}
@@ -46,31 +47,40 @@ export class FontLoader extends BaseLoader {
    * @private
    * @memberof FontLoader
    * */
-  private options: FontLoaderOptions
-  private rules: ValidationRule[] | undefined
+  private options:  FontLoaderOptions
+  private rules:    ValidationRule[] | undefined
 
 
   constructor(options?: FontLoaderOptions, rules?: ValidationRule[]) {
     super(options?.debugLevel)
-    this.fontFaces = []
-    this.loadedFontFaces = new Set()
-    this.options = options ? { ...options, ...DEFAULT_LOADER_OPTIONS } : DEFAULT_LOADER_OPTIONS
-    this.rules = rules
+
+    this.fontFaces        = []
+    this.loadedFontFaces  = new Set()
+    this.options          = options ? { ...options, ...DEFAULT_LOADER_OPTIONS } : DEFAULT_LOADER_OPTIONS
+    this.rules            = rules
 //    this.eventEmitter = new EventEmitter();
   }
 
   public async loadFromUrl(args: loadFromUrlProps) {
     const { fonts, params } = args;
-    fonts.forEach((font) => {
+    fonts.forEach( async (font) => {
       const { url, family, options } = font;
-      const fontFace = this.createFromUrl(family, url, options);
+      const fontFace = await this.createFromUrl(family, url, options);
       if (fontFace) {
         this.fontFaces.push(fontFace);
       }
     });
 
     try {
-      await this.load(this.fontFaces, params, this.options.useResolvers, this.options.useResolvers ? this.rules : undefined);
+      await this.load
+      (
+        this.fontFaces,
+        params,
+        this.options.
+        useResolvers,
+        this.options.useResolvers ? this.rules : undefined
+      );
+
     } catch (error) {
       if(this.options.useResolvers) {
         console.error('should call resolver', error);

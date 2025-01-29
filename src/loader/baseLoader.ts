@@ -11,11 +11,6 @@ import { EventEmitter } from "../services/eventService";
 import { ValidationRule } from '../types/validations';
 
 export class BaseLoader {
-    private eventEmitter: EventEmitter;
-    private originalBuffers: Map<string, ArrayBuffer>;
-    private logger: Logger;
-    private loadedFontFacesList: Set<string>;
-    private fontResolver: fontResolver;
 
     /**
      *  List of font faces that have been parsed
@@ -23,22 +18,28 @@ export class BaseLoader {
      * @private
      * @memberof FontLoader
      * */
-    parsedFontFaces: Map<string, op.Font>;
-    errorHandler: FontErrorHandler;
+    public  parsedFontFaces:        Map<string, op.Font>;
+    public  errorHandler:           FontErrorHandler;
+    private eventEmitter:           EventEmitter;
+    private originalBuffers:        Map<string, ArrayBuffer>;
+    private logger:                 Logger;
+    private loadedFontFacesList:    Set<string>;
+    private fontResolver:           fontResolver;
+
 
     constructor(debugLevel?: LogLevel) {
-        this.originalBuffers = new Map();
-        this.parsedFontFaces = new Map();
-        this.loadedFontFacesList = new Set();
-        this.errorHandler = new FontErrorHandler();
-        this.fontResolver = new fontResolver();
+        this.originalBuffers        = new Map();
+        this.parsedFontFaces        = new Map();
+        this.loadedFontFacesList    = new Set();
+        this.errorHandler           = new FontErrorHandler();
+        this.fontResolver           = new fontResolver();
+        this.eventEmitter           = new EventEmitter();
         this.logger = new Logger({
-        minLevel: debugLevel || "info",
-        prefix: "Loader",
-        timestamp: true,
-        colors: true,
+        minLevel:   debugLevel || "info",
+        prefix:     "Loader",
+        timestamp:  true,
+        colors:     true,
         });
-        this.eventEmitter = new EventEmitter();
     }
 
     async load(fontFaces: FontFace[], params?: loadParameters, resolve = true, rules?: ValidationRule[]): Promise<void> {
@@ -131,11 +132,11 @@ export class BaseLoader {
                 //if(resolve) {
                     this.logger.warn(`Failed to load font: ${fontFace.family}, ${errorMessage}, resolver called`);
                     this.logger.info(`Resolving font: ${fontFace.family}`, this.originalBuffers);
-
                     this.logger.info("Checking originalBuffers keys:", [...this.originalBuffers.keys()]);
                     this.logger.info("Attempting to retrieve buffer for:", fontFace.family);
 
                     const buffer = this.originalBuffers.get(fontFace.family);
+
                     if (!buffer) {
                         this.logger.error(`Buffer not found for family: ${fontFace.family}`);
                     } else {
@@ -231,11 +232,11 @@ export class BaseLoader {
         }
     }
 
-    createFromUrl(
+    async createFromUrl(
         family: string,
         url: string,
         options?: fontFacesOptions
-    ): FontFace | null {
+    ): Promise<FontFace | null> {
         try {
         let fontUrl, fontFamily, fontDescriptors;
 
@@ -268,7 +269,14 @@ export class BaseLoader {
             fontDescriptors
         );
 
-        this.setOriginalBuffer(family, fontUrl);
+        try {
+            await this.setOriginalBuffer(family, fontUrl).then(() => { this.parse(family) });
+        } catch (error) {
+            this.logger.error(`Failed to set buffer for family: ${family}`);
+            this.errorHandler.addFailedFont(family, error);
+        }
+
+        this.logger.info(`Font created from URL: ${fontUrl}`);
 
         return fontFace;
         } catch (error) {
@@ -321,7 +329,7 @@ export class BaseLoader {
         const fontFace = new FontFace(fontFamily, fontBuffer, fontDescriptors);
 
         try {
-            await this.setOriginalBuffer(family, buffer);
+            await this.setOriginalBuffer(family, buffer).then(() => { this.parse(family) });
         } catch (error) {
             this.logger.error(`Failed to set buffer for family: ${family}`);
             this.errorHandler.addFailedFont(family, error);
@@ -381,6 +389,8 @@ export class BaseLoader {
     }
 
     getFont(family: string): op.Font | null {
+        this.logger.info(`Retrieving font for family: ${family}`);
+        this.logger.info(`Parsed fonts:`, this.parsedFontFaces);
         return this.parsedFontFaces.get(family) || null;
     }
 

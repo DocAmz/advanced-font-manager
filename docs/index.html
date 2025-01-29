@@ -32,6 +32,15 @@
                 <li><a href="#events">Events</a></li>
                 <li><a href="#status">Status Methods</a></li>
                 <li><a href="#errors">Error Handling</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <ul>
+                    <li><a href="#example-react">React</a></li>
+                    <li><a href="#example-vue">Vue</a></li>
+                    <li><a href="#example-angular">Angular</a></li>
+                    <li><a href="#example-vanilla">Vanilla JS</a></li>
+                    <li><a href="#example-svelt">Svelt</a></li>
+                </ul>
+                <li><a href="#api">API</a></li>
             </ul>
         </aside>
 
@@ -75,9 +84,9 @@
                 <p>Advanced Font Manager provides a simple API for loading fonts from URLs, files, or buffer data. It also includes built-in validation and error handling, event-driven architecture, and font face lifecycle management. Environment-agnostic and easy to integrate with any web application.</p>
                 <pre>
                     <code class="language-javascript">
-                        import { FontLoader } from 'advanced-font-manager';
+                        import { FontManager } from 'advanced-font-manager';
 
-                        const loader = new FontLoader(
+                        const loader = new FontManager(
                             options: {
                                 useResolvers?: boolean; // Should we use the resolvers to load the fonts
                                 disableWarnings?: boolean; // Should we disable warnings
@@ -109,9 +118,9 @@
                 </div>
                 <div class="tab-content active" id="url">
                     <pre><code class="language-javascript">
-                        import { FontLoader } from 'advanced-font-manager';
+                        import { FontManager } from 'advanced-font-manager';
 
-                        const loader = new FontLoader({ debugLevel: 'info' });
+                        const loader = new FontManager({ debugLevel: 'info' });
                         await loader.loadFromUrl({
                             fonts: [{
                                 url: 'https://fonts.com/roboto.ttf', // Font URL
@@ -126,9 +135,9 @@
                 <div class="tab-content" id="file">
                     <h4>Using custom name :</h4>
                     <pre><code class="language-javascript">
-                        import { FontLoader } from 'advanced-font-manager';
+                        import { FontManager } from 'advanced-font-manager';
 
-                        const loader = new FontLoader({ debugLevel: 'info' });
+                        const loader = new FontManager({ debugLevel: 'info' });
                         await loader.loadFromFile({
                             fonts: [{
                                 url: File, // File object
@@ -141,9 +150,9 @@
                         </code></pre>
                     <h4>Using file input name :</h4>
                     <pre><code class="language-javascript">
-                        import { FontLoader, sanitizeFamilyName } from 'advanced-font-manager';
+                        import { FontManager, sanitizeFamilyName } from 'advanced-font-manager';
 
-                        const loader = new FontLoader({ debugLevel: 'info' });
+                        const loader = new FontManager({ debugLevel: 'info' });
                         const fontName = sanitizeFamilyName(file.name.split('.')[0])
                         await loader.loadFromFile({
                             fonts: [{
@@ -160,9 +169,9 @@
                 <div class="tab-content" id="buffer">
                         <pre>
                             <code class="language-javascript no-bg">
-                            import { FontLoader } from 'advanced-font-manager';
+                            import { FontManager } from 'advanced-font-manager';
 
-                            const loader = new FontLoader({ debugLevel: 'info' });
+                            const loader = new FontManager({ debugLevel: 'info' });
                             await loader.loadFromUrl({
                                 fonts: [{
                                     buffer: fontBuffer, // ArrayBuffer
@@ -181,13 +190,13 @@
                 <p>Advanced Font Manager provides a simple API for loading fonts from URLs, files, or buffer data. It also includes built-in validation and error handling, event-driven architecture, and font face lifecycle management. Environment-agnostic and easy to integrate with any web application.</p>
                 <pre>
                     <code class="language-javascript">
-                        import { FontLoader } from 'advanced-font-manager';
+                        import { FontManager } from 'advanced-font-manager';
 
-                        const loader = new FontLoader({ debugLevel: 'info' });
+                        const loader = new FontManager({ debugLevel: 'info' });
                         loader.on('fontLoadComplete', (event) => {
                             console.log('Font loaded', event);
                         });
-                        loader.on('fontLoadError', (event) => {
+                        loader.on('fontLoaderError', (event) => {
                             console.error('Font loading error', event);
                         });
                     </code>
@@ -198,9 +207,9 @@
                 <p>Advanced Font Manager provides a simple API for loading fonts from URLs, files, or buffer data. It also includes built-in validation and error handling, event-driven architecture, and font face lifecycle management. Environment-agnostic and easy to integrate with any web application.</p>
                 <pre>
                     <code class="language-javascript">
-                        import { FontLoader } from 'advanced-font-manager';
+                        import { FontManager } from 'advanced-font-manager';
 
-                        const loader = new FontLoader({ debugLevel: 'info' });
+                        const loader = new FontManager({ debugLevel: 'info' });
 
                         loader.loadFromBuffer(
                             [{ name: fontName, font: arrayBuffer, options: {} }],
@@ -247,6 +256,80 @@
                 </ul>
             </section>
             <!-- Additional sections -->
+
+            <section id="examples">
+                <h2>Examples</h2>
+                <p>Advanced Font Manager provides a simple API for loading fonts from URLs, files, or buffer data. It also includes built-in validation and error handling, event-driven architecture, and font face lifecycle management. Environment-agnostic and easy to integrate with any web application.</p>
+                <ul>
+                    <li><a href="#example-react">React</a></li>
+                    <li><a href="#example-vue">Vue</a></li>
+                    <li><a href="#example-angular">Angular</a></li>
+                    <li><a href="#example-vanilla">Vanilla JS</a></li>
+                    <li><a href="#example-svelt">Svelt</a></li>
+                </ul>
+            </section>
+            <section id="example-react">
+
+                <h3>React</h3>
+                <p>Advanced Font Manager provides a simple API for loading fonts from URLs, files, or buffer data. It also includes built-in validation and error handling, event-driven architecture, and font face lifecycle management. Environment-agnostic and easy to integrate with any web application.</p>
+                <pre>
+                    <code class="language-javascript">
+                        import { useState } from "react"
+                        import { FontManager, sanitizeFamilyName } from "advanced-font-manager"
+                        import { Font } from "opentype.js"
+
+                        export const useFont = () => {
+                          const [loading, setLoading] = useState(false)
+                          const [fontData, setFontData] = useState<Font | null>(null)
+                          const [fontFaceData, setFontFaceData] = useState<FontFace | null>(null)
+
+
+                          const loadFont = async (files: File[]) => {
+
+                            setLoading(true)
+
+                            const fontManager = new FontManager({
+                              useResolvers: true,
+                            }, [])
+
+                            if (files.length === 0) {
+                              console.error("No files provided");
+                              setLoading(false);
+                              return;
+                            }
+
+                            const fonts = files.map((file) => {
+                              return {
+                                file,
+                                family: sanitizeFamilyName(file.name) as string,
+                              }
+                            })
+                            try {
+                              await fontManager.loadFromFile({
+                                fonts: fonts,
+                                params: {
+                                  timeOut: 5000
+                                }
+                              })
+                            } catch (error) {
+                              console.error("Error loading font", error)
+                            }
+
+                            const fontFaces = fontManager.getFontFaces()
+                            const family = fontFaces[0].family
+                            const fontData = fontManager.getFontFaceData(family)
+
+                            setFontData(fontData)
+                            setFontFaceData(fontFaces[0])
+                            setLoading(false)
+                          }
+
+                          return { loading, fontData, loadFont, fontFaceData }
+                        }
+                    </code>
+                </pre>
+
+            </section>
         </main>
     </div>
 

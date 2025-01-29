@@ -1,20 +1,20 @@
 export type LogLevel = 'info' | 'warn' | 'error' | 'debug' | 'reset';
 
 export interface LoggerOptions {
-    minLevel: LogLevel;
-    prefix?: string;
+    minLevel:   LogLevel;
+    prefix?:    string;
     timestamp?: boolean;
-    colors?: boolean;
+    colors?:    boolean;
 }
 
 export class Logger {
   private config: LoggerOptions;
   private readonly colors: Record<LogLevel, string> = {
-    info: '\x1b[32m',
-    warn: '\x1b[33m',
-    error: '\x1b[31m',
-    debug: '\x1b[36m',
-    reset: '\x1b[0m'
+    info:   '\x1b[32m',
+    warn:   '\x1b[33m',
+    error:  '\x1b[31m',
+    debug:  '\x1b[36m',
+    reset:  '\x1b[0m'
   }
 
   constructor(config: LoggerOptions) {
@@ -35,16 +35,23 @@ export class Logger {
     return `[${this.config.prefix}]`;
   }
 
-  private formatMessage(level: LogLevel, message: string): string {
-    const timestamp = this.getTimestamp();
-    const prefix = this.getPrefix();
-    const levelStr = `[${level.toUpperCase()}]`;
+  private formatMessage(level: LogLevel, message: string, ...args: any[]): string {
+    const timestamp   = this.getTimestamp();
+    const prefix      = this.getPrefix();
+    const levelStr    = `[${level.toUpperCase()}]`;
+
+    const formattedArgs = args.map(arg => {
+      if (typeof arg === 'object') {
+        return JSON.stringify(arg);
+      }
+      return arg;
+    }).join(' ');
 
     if(this.config.colors) {
-      return `${timestamp} ${prefix} ${this.colors[level]}${levelStr} ${message}${this.colors.reset}`;
+      return `${timestamp} ${prefix} ${this.colors[level]}${levelStr} ${message}${this.colors.reset} ${formattedArgs}`;
     }
 
-    return `${timestamp} ${prefix} ${levelStr} ${message}`;
+    return `${timestamp} ${prefix} ${levelStr} ${message} ${formattedArgs}`;
   }
 
   private shouldLog(messageLevel: LogLevel): boolean {
@@ -71,6 +78,5 @@ export class Logger {
     if (!this.shouldLog('error')) return;
     console.error(this.formatMessage('error', message), ...args);
   }
-
 
 }
