@@ -1,5 +1,5 @@
 
-import { EventEmitter } from 'events';
+// import { EventEmitter } from 'events';
 import { BaseLoader } from "./baseLoader";
 import { FontLoadError } from '../types/errors';
 import { ValidationRule } from '../types/validations';
@@ -23,7 +23,8 @@ import { FontLoaderEvents, FontLoaderOptions, loadFromBufferProps, loadFromFileP
  * @example loader.loadFromFile({ fonts: [{ file: file, family: 'Roboto' }] })
  * @example loader.loadFromBuffer({ fonts: [{ buffer: buffer, family: 'Roboto' }] })
  */
-export class FontLoader extends BaseLoader {
+export class FontManager extends BaseLoader {
+
   /**
    *  List of font faces to load
    * @type {FontFace[]}
@@ -46,85 +47,92 @@ export class FontLoader extends BaseLoader {
    * @private
    * @memberof FontLoader
    * */
-  private options: FontLoaderOptions
-
-  /**
-   *  Event emitter for the font loader
-   * @type {EventEmitter}
-   * @private
-   * @memberof FontLoader
-   * */
-
-  private eventEmitter: EventEmitter;
-
+  private options:  FontLoaderOptions
+  private rules:    ValidationRule[] | undefined
 
 
   constructor(options?: FontLoaderOptions, rules?: ValidationRule[]) {
     super(options?.debugLevel)
-    this.fontFaces = []
-    this.loadedFontFaces = new Set()
-    this.options = options ? { ...options, ...DEFAULT_LOADER_OPTIONS } : DEFAULT_LOADER_OPTIONS
-    this.eventEmitter = new EventEmitter();
+
+    this.fontFaces        = []
+    this.loadedFontFaces  = new Set()
+    this.options          = options ? { ...options, ...DEFAULT_LOADER_OPTIONS } : DEFAULT_LOADER_OPTIONS
+    this.rules            = rules
+//    this.eventEmitter = new EventEmitter();
   }
 
   public async loadFromUrl(args: loadFromUrlProps) {
     const { fonts, params } = args;
-    fonts.forEach((font) => {
+    fonts.forEach( async (font) => {
       const { url, family, options } = font;
-      const fontFace = this.createFromUrl(family, url, options);
+      const fontFace = await this.createFromUrl(family, url, options);
       if (fontFace) {
         this.fontFaces.push(fontFace);
       }
     });
 
     try {
-      await this.load(this.fontFaces, params);
-    } catch (error) {
+      await this.load
+      (
+        this.fontFaces,
+        params,
+        this.options.
+        useResolvers,
+        this.options.useResolvers ? this.rules : undefined
+      );
 
+    } catch (error) {
       if(this.options.useResolvers) {
         console.error('should call resolver', error);
       } else {
         console.error('should not call resolver', error);
       }
-
     }
   }
   public async loadFromFile(args: loadFromFileProps) {
     const { fonts, params } = args
-    fonts.forEach(async (font) => {
+
+
+    const fontPromises = fonts.map(async (font) => {
       const { file, family, options } = font;
       const fontFace = await this.createFromFile(file, family, options);
       if (fontFace) {
-        this.fontFaces.push(fontFace);
+      this.fontFaces.push(fontFace);
       }
     });
-    try {
-      await this.load(this.fontFaces, params);
-    } catch (error) {
-      console.error(error);
-    }
+
+    await Promise.all(fontPromises).then(async () => {
+      try {
+        await this.load(this.fontFaces, params, this.options.useResolvers);
+      } catch (error) {
+        if(this.options.useResolvers) {
+          console.error('should call resolver', error);
+        } else {
+          console.error('should not call resolver', error);
+        }
+      }
+    })
   }
   public async loadFromBuffer(args: loadFromBufferProps) {
     const { fonts, params } = args
-    fonts.forEach((font) => {
+    fonts.forEach(async (font) => {
       const { buffer, family, options } = font;
-      const fontFace = this.createFromBuffer(buffer, family, options);
+      const fontFace = await this.createFromBuffer(buffer, family, options);
       if (fontFace) {
         this.fontFaces.push(fontFace);
       }
     });
 
     try {
-      await this.load(this.fontFaces, params);
+      await this.load(this.fontFaces, params, this.options.useResolvers);
     } catch (error) {
-      console.error(error);
+      if(this.options.useResolvers) {
+        console.error('should call resolver', error);
+      } else {
+        console.error('should not call resolver', error);
+      }
     }
-
   }
-
-  public on(event: FontLoaderEvents, listener: (...args: any[]) => void ) {}
-  public off(event: FontLoaderEvents, listener: (...args: any[]) => void ) {}
-
 
   /**
    * Get the list of font faces
@@ -206,6 +214,14 @@ export class FontLoader extends BaseLoader {
     this.parse(family);
   }
 
-  public destroy() {}
+  public getFontFaceData(family: string): opentype.Font | null {
+    return this.getFont(family);
+  }
+
+  public destroy() {
+    this.unloadFontFaces();
+    this.loadedFontFaces.clear();
+    super.destroy();
+  }
 
 }

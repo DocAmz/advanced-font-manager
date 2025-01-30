@@ -2,38 +2,39 @@
 // Project: advanced-font-loader
 
 import * as op from "opentype.js";
+import { Prettify } from "./utility";
 
 export type ValidationRule = {
   type: 'metrics' | 'glyph' | 'font' | 'names' | 'tables'
-  rule: MetricsValidationRule | GlyphValidationRule;
+  rule: MetricsValidationRule | GlyphValidationRule | FontValidationRule | NamesValidationRule | TablesValidationRule
   message?: string;
 }
 
-export interface FontValidationRule {
+export type FontValidationRule  ={
   check: (font: op.Font) => boolean;
   fix?: (font: op.Font) => op.Font | null;
   severity: "error" | "warning";
 }
 
-export interface TablesValidationRule {
+export type TablesValidationRule = {
   check: (font: op.Font) => boolean;
   fix?: (font: op.Font) => op.Font | null;
   severity: "error" | "warning";
 }
 
-export interface NamesValidationRule {
+export type NamesValidationRule = {
   check: (font: op.Font) => boolean;
   fix?: (font: op.Font) => op.Font | null;
   severity: "error" | "warning";
 }
 
-export interface MetricsValidationRule {
+export type MetricsValidationRule = {
   check: (font: op.Font) => boolean;
   fix?: (font: op.Font) => op.Font | null;
   severity: "error" | "warning";
 }
 
-export interface GlyphValidationRule {
+export type GlyphValidationRule = {
   check: (glyph: op.Glyph) => boolean;
   fix?: (glyph: op.Glyph) => op.Glyph | null;
   severity: "error" | "warning";
